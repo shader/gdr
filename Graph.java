@@ -3,7 +3,7 @@ import java.util.*;
 public class Graph {
     private Hashtable<String, Node> nodes;
     private ArrayList<Edge> edges;
-    private int maxEdges=0, maxNodes=0;
+    private int maxEdges=0, maxNodes=0, maxWidth, maxHeight;
 
     public Graph() {
         nodes = new Hashtable<String, Node>();
@@ -20,6 +20,8 @@ public class Graph {
     
     public void addNode(Node node) {
         nodes.put(node.getName(), node);
+        maxWidth = node.getX() > maxWidth ? node.getX() : maxWidth;
+        maxHeight = node.getY() > maxHeight ? node.getY() : maxHeight;
     }
 
     public ArrayList<Edge> getEdges() {
@@ -56,5 +58,13 @@ public class Graph {
 
     public boolean isFull() {
         return nodes.size() == maxNodes && edges.size() == maxEdges && maxNodes != 0;
+    }
+
+    public int getWidth() {
+        return maxWidth;
+    }
+
+    public int getHeight() {
+        return maxHeight;
     }
 }

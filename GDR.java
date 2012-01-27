@@ -11,6 +11,6 @@ public class GDR {
             reader.ReadStdin();
         }
 
-        reader.getGraph().printAdjacencies();
+        View view = new View(reader.getGraph());
     }
 }
