@@ -1,3 +1,0 @@
-#! /bin/sh
-
-java -cp "./lib/swt/swt.jar:." -Djava.library.path="swt" GDR $*
