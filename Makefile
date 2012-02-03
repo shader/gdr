@@ -18,7 +18,7 @@ default: classes gdr
 .PHONY: gdr
 gdr: 
 	echo "#! /bin/sh" > gdr
-	echo 'java -cp "./lib/$(ARCH)/swt/swt.jar:." -Djava.library.path="swt" GDR $*' >> gdr
+	echo 'java -cp "./lib/$(ARCH)/swt/swt.jar:." -Djava.library.path="swt" GDR $$*' >> gdr
 	chmod +x gdr
 
 classes: $(CLASSES:.java=.class)
