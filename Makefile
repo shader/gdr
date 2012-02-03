@@ -1,4 +1,5 @@
-JFLAGS = -g -cp "lib/swt/swt.jar:."
+ARCH = 32bit
+JFLAGS = -g -cp "lib/$(ARCH)/swt/swt.jar:."
 JC = javac
 .SUFFIXES: .java .class
 .java.class:
@@ -15,6 +16,11 @@ CLASSES = \
 default: classes
 
 classes: $(CLASSES:.java=.class)
+
+32bit: classes
+
+64bit: ARCH = 64bit
+64bit: classes
 
 clean:
 	$(RM) *.class
