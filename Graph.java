@@ -1,21 +1,21 @@
 import java.util.*;
 
 public class Graph {
-    private Hashtable<String, Node> nodes;
+    private HashMap<String, Node> nodes;
     private ArrayList<Edge> edges;
     private int maxEdges=0, maxNodes=0, maxWidth, maxHeight;
 
     public Graph() {
-        nodes = new Hashtable<String, Node>();
+        nodes = new HashMap<String, Node>();
         edges = new ArrayList<Edge>();
     }
 
-    public Collection<Node> getNodes() {
-        return nodes.values();
+    public Iterable<Node> getNodes() {
+        return Collections.unmodifiableCollection(nodes.values());
     }
     
     public Node getNode(String name) {
-        return (Node)nodes.get(name);
+        return nodes.get(name);
     }
     
     public void addNode(Node node) {
@@ -24,8 +24,8 @@ public class Graph {
         maxHeight = node.getY() > maxHeight ? node.getY() : maxHeight;
     }
 
-    public ArrayList<Edge> getEdges() {
-        return (ArrayList<Edge>)edges.clone();
+    public Iterable<Edge> getEdges() {
+        return Collections.unmodifiableList(edges);
     }
 
     public void addEdge(Edge edge) {
