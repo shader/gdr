@@ -13,6 +13,6 @@ public class GDR {
 
         Animator anim = new Animator();
         TestAnim test = new TestAnim(anim, reader.getGraph());
-        anim.animate();
+        anim.run();
     }
 }

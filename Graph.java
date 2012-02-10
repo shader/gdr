@@ -1,4 +1,6 @@
 import java.util.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
 
 public class Graph {
     private HashMap<String, Node> nodes;
@@ -66,5 +68,15 @@ public class Graph {
 
     public int getHeight() {
         return maxHeight;
+    }
+
+    public void draw(PaintEvent e) {
+        for (Edge edge : getEdges()) { 
+            edge.draw(e, Config.getForegroundColor(), Config.getBackgroundColor());
+        }
+
+        for (Node node : getNodes()) {
+            node.draw(e, Config.getForegroundColor(), Config.getBackgroundColor());
+        }
     }
 }

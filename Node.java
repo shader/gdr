@@ -1,6 +1,9 @@
 import java.util.*;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.SWT;
 
-public class Node {
+public class Node implements Element {
     private String name;
     private String label;
     private int x;
@@ -46,5 +49,14 @@ public class Node {
 
     public void setY(int y) {
         this.y = y;
+    }
+
+    public void draw(PaintEvent e, Color foreground, Color background) {
+        int d = Config.getDiameter();
+        e.gc.setBackground(background);
+        e.gc.fillOval(x-d/2, y-d/2, d, d);
+        e.gc.setForeground(foreground);
+        e.gc.drawOval(x-d/2, y-d/2, d, d);
+        e.gc.drawText(name, x-d/4, y-d/4, SWT.DRAW_TRANSPARENT);
     }
 }

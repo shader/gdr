@@ -13,6 +13,7 @@ public class Reset implements Effect {
     }
 
     public void draw(PaintEvent e, Animator anim) {
-        anim.drawGraph(graph);
+        anim.getShell().setSize(graph.getWidth() + 50, graph.getHeight() + 50);
+        graph.draw(e);
     }
 }

@@ -9,18 +9,23 @@ public class Animator {
     private Canvas canvas;
     private float step = 0;
     private ArrayList<Effect> effects;
-    PaintEvent e;
+    private PaintEvent e;
     private Shell shell;
+    private Display display;
+    private Runnable runnable;
 
     public Animator() {
         effects = new ArrayList<Effect>();
-        final Display display = new Display();
+        display = new Display();
         shell = new Shell(display);
         shell.setText("Gallant Animation Viewer");
         createContents(shell);
+    }
+
+    public void run() {
         shell.open();
  
-        Runnable runnable = new Runnable() {
+        runnable = new Runnable() {
                 public void run() {
                     animate();
                     display.timerExec(Config.getTimerInterval(), this);
@@ -46,7 +51,6 @@ public class Animator {
         canvas = new Canvas(shell, SWT.NO_BACKGROUND);
         canvas.addPaintListener(new PaintListener() {
                 public void paintControl(PaintEvent e) {
-                    Animator.this.e = e;
                     for(int i=0; i<step && i<effects.size(); i++) {
                         effects.get(i).draw(e, Animator.this);
                     }
@@ -55,39 +59,19 @@ public class Animator {
     }
  
     //Perform calculations required for redrawing the canvas
-    public void animate() {
+    void animate() {
         step += 1.0/Config.getStepLength();
+        if (step > effects.size()) {
+            display.timerExec(-1, runnable); //stop animation
+        }
         canvas.redraw();
-    }
-
-    public void drawGraph(Graph graph) {
-        shell.setSize(graph.getWidth() + 50, graph.getHeight() + 50);
-        
-        for (Edge edge : graph.getEdges()) { 
-            drawEdge(edge, Config.getForegroundColor());
-        }
-
-        for (Node node : graph.getNodes()) {
-            drawNode(node, Config.getForegroundColor(), Config.getBackgroundColor());
-        }
-    }
-
-    public void drawNode(Node n, Color foreground, Color background) {
-        int x = n.getX(), y=n.getY(), d=Config.getDiameter();
-        e.gc.setBackground(background);
-        e.gc.fillOval(x-d/2, y-d/2, d, d);
-        e.gc.setForeground(foreground);
-        e.gc.drawOval(x-d/2, y-d/2, d, d);
-        e.gc.drawText(n.getName(), x-d/4, y-d/4, SWT.DRAW_TRANSPARENT);
-    }
-
-    public void drawEdge(Edge edge, Color foreground) {
-        Node a = edge.getA(), b = edge.getB();
-        e.gc.setForeground(foreground);
-        e.gc.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
     }
 
     public void add(Effect effect) {
         effects.add(effect);
+    }
+
+    public Shell getShell() {
+        return shell;
     }
 }
