@@ -11,7 +11,8 @@ public class GDR {
             reader.ReadStdin();
         }
 
-        Animator anim = new Animator();
+        View view = new View();
+        Animator anim = new Animator(view);
         TestAnim test = new TestAnim(anim, reader.getGraph());
         anim.run();
     }

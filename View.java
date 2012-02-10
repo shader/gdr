@@ -1,56 +1,92 @@
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Device;
+import org.eclipse.swt.events.PaintEvent;
+import org.eclipse.swt.events.PaintListener;
+import org.eclipse.swt.events.SelectionAdapter;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.widgets.ToolBar;
+import org.eclipse.swt.widgets.ToolItem;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 
 public class View {
-    private Graph graph;
+    private Shell shell;
+    private Display display;
+    private Image exitImg;
 
-    public View(Graph graph) {
-        this.graph = graph;
 
-	Display display = new Display();
-	Shell shell = new Shell(display);
-
-        shell.addPaintListener(new GraphPaintListener());
-
-        shell.setText("GDR");
-        shell.setSize(graph.getWidth() + 50, graph.getHeight() + 50);
-	shell.open();
+    public View() {
+        display = new Display();
+        shell = new Shell(display);
+        shell.setText("Gallant Animation Viewer");
+        initMenu();
+        initToolbar();
+        shell.open();
 
 	while (!shell.isDisposed ()) {
             if (!display.readAndDispatch())
                 display.sleep();
 	}
-
-	display.dispose();
     }
 
-    private class GraphPaintListener implements PaintListener {
-        public void paintControl(PaintEvent e) {
-            drawGraph(e);
-            e.gc.dispose();
-        }
-    }
-
-    private void drawGraph(PaintEvent e) {
-        Color white = new Color(e.display, 255, 255, 255);
-        int r = 30;
+    public void initMenu() {
+        Menu menuBar = new Menu(shell, SWT.BAR);
+        MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
+        cascadeFileMenu.setText("&File");
         
-        for (Edge edge : graph.getEdges()) {
-            Node a = edge.getA(), b = edge.getB();
-            e.gc.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
+        Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
+        cascadeFileMenu.setMenu(fileMenu);
+
+        MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
+        exitItem.setText("&Exit");
+        shell.setMenuBar(menuBar);
+
+        exitItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                shell.getDisplay().dispose();
+                System.exit(0);
+            }
+        });
+    }
+
+    public void initToolbar() {
+
+        Device dev = shell.getDisplay();
+        try {
+            exitImg = new Image(dev, "exit.png");
+
+        } catch (Exception e) {
+            System.out.println("Cannot load images");
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
 
-        for (Node n : graph.getNodes()) {
-            int x = n.getX(), y=n.getY();
-            e.gc.setBackground(white);
-            e.gc.fillOval(x-r/2, y-r/2, r, r);
-            e.gc.drawOval(x-r/2, y-r/2, r, r);
-            e.gc.drawText(n.getName(), x-r/4, y-r/4, SWT.DRAW_TRANSPARENT);
-        }
+        ToolBar toolBar = new ToolBar(shell, SWT.BORDER);
+
+        ToolItem exit = new ToolItem(toolBar, SWT.PUSH);
+        exit.setImage(exitImg);
+
+        toolBar.pack();
+
+        exit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                System.exit(0);
+            }
+        });
+    }
+
+    public Shell getShell() {
+        return shell;
+    }
+
+    public Display getDisplay() {
+        return display;
     }
 }
