@@ -59,7 +59,7 @@ public class View {
 
         Device dev = shell.getDisplay();
         try {
-            exitImg = new Image(dev, "exit.png");
+            exitImg = new Image(dev, "img/exit.png");
 
         } catch (Exception e) {
             System.out.println("Cannot load images");
