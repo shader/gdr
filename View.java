@@ -1,37 +1,45 @@
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Device;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.events.SelectionAdapter;
-import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.ToolBar;
-import org.eclipse.swt.widgets.ToolItem;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.*;
 
 public class View {
     private Shell shell;
     private Display display;
-    private Image exitImg;
+    private Image exitImg, playImg, pauseImg;
+    private Canvas canvas;
+    private Animator animator;
 
 
     public View() {
         display = new Display();
         shell = new Shell(display);
         shell.setText("Gallant Animation Viewer");
+
+        FillLayout fillLayout = new FillLayout();
+        fillLayout.type = SWT.VERTICAL;
+        shell.setLayout(new RowLayout());
+
         initMenu();
         initToolbar();
+        initCanvas();
         shell.open();
 
 	while (!shell.isDisposed ()) {
             if (!display.readAndDispatch())
                 display.sleep();
 	}
+    }
+
+    public void initCanvas() {
+        canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.BORDER);
+        canvas.addPaintListener(new PaintListener() {
+                public void paintControl(PaintEvent e) {
+                    e.gc.setBackground(display.getSystemColor(SWT.COLOR_CYAN));
+                    e.gc.fillOval(200,200,100,100);
+                }
+            });
     }
 
     public void initMenu() {
@@ -60,6 +68,8 @@ public class View {
         Device dev = shell.getDisplay();
         try {
             exitImg = new Image(dev, "img/exit.png");
+            playImg = new Image(dev, "img/play.png");
+            //            pauseImg = new Image(dev, "img/pause.png");
 
         } catch (Exception e) {
             System.out.println("Cannot load images");
@@ -72,12 +82,25 @@ public class View {
         ToolItem exit = new ToolItem(toolBar, SWT.PUSH);
         exit.setImage(exitImg);
 
+        ToolItem play = new ToolItem(toolBar, SWT.PUSH);
+        play.setImage(playImg);
+
+        //        ToolItem pause = new ToolItem(toolBar, SWT.PUSH);
+        //        pause.setImage(pauseImg);
+
         toolBar.pack();
 
         exit.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
                 System.exit(0);
+            }
+        });
+
+        play.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                canvas.redraw();
             }
         });
     }
@@ -88,5 +111,9 @@ public class View {
 
     public Display getDisplay() {
         return display;
+    }
+
+    public Animator getAnimator() {
+        return animator;
     }
 }

@@ -11,14 +11,13 @@ public class Animator {
     private ArrayList<Effect> effects;
     private PaintEvent e;
     private Runnable runnable;
-    private View view;
     private Display display;
 
-    public Animator(View view) {
-        this.view = view;
-        this.display = view.getDisplay();
+    public Animator(Canvas canvas) {
+        this.canvas = canvas;
+        display = canvas.getDisplay();
         effects = new ArrayList<Effect>();
-        createContents(view.getShell());
+        createContents(canvas);
     }
 
     public void run() {
@@ -32,11 +31,7 @@ public class Animator {
         display.timerExec(Config.getTimerInterval(), runnable);
     }
  
-    private void createContents(final Shell shell) {
-        shell.setLayout(new FillLayout());
-
-        // Create the canvas for drawing
-        canvas = new Canvas(shell, SWT.NO_BACKGROUND);
+    private void createContents(Canvas canvas) {
         canvas.addPaintListener(new PaintListener() {
                 public void paintControl(PaintEvent e) {
                     for(int i=0; i<step && i<effects.size(); i++) {
@@ -57,9 +52,5 @@ public class Animator {
 
     public void add(Effect effect) {
         effects.add(effect);
-    }
-
-    public Shell getShell() {
-        return view.getShell();
     }
 }

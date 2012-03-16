@@ -12,8 +12,6 @@ public class GDR {
         }
 
         View view = new View();
-        Animator anim = new Animator(view);
-        TestAnim test = new TestAnim(anim, reader.getGraph());
-        anim.run();
+        TestAnim test = new TestAnim(view.getAnimator(), reader.getGraph());
     }
 }
