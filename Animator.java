@@ -10,21 +10,17 @@ public class Animator {
     private float step = 0;
     private ArrayList<Effect> effects;
     private PaintEvent e;
-    private Shell shell;
-    private Display display;
     private Runnable runnable;
+    private Display display;
 
-    public Animator() {
+    public Animator(Canvas canvas) {
+        this.canvas = canvas;
+        display = canvas.getDisplay();
         effects = new ArrayList<Effect>();
-        display = new Display();
-        shell = new Shell(display);
-        shell.setText("Gallant Animation Viewer");
-        createContents(shell);
+        createContents(canvas);
     }
 
     public void run() {
-        shell.open();
- 
         runnable = new Runnable() {
                 public void run() {
                     animate();
@@ -33,22 +29,9 @@ public class Animator {
             };
  
         display.timerExec(Config.getTimerInterval(), runnable);
- 
-        while (!shell.isDisposed()) {
-            if (!display.readAndDispatch()) {
-                display.sleep();
-            }
-        }
- 
-        display.timerExec(-1, runnable);
-        display.dispose();
     }
  
-    private void createContents(final Shell shell) {
-        shell.setLayout(new FillLayout());
-
-        // Create the canvas for drawing
-        canvas = new Canvas(shell, SWT.NO_BACKGROUND);
+    private void createContents(Canvas canvas) {
         canvas.addPaintListener(new PaintListener() {
                 public void paintControl(PaintEvent e) {
                     for(int i=0; i<step && i<effects.size(); i++) {
@@ -69,9 +52,5 @@ public class Animator {
 
     public void add(Effect effect) {
         effects.add(effect);
-    }
-
-    public Shell getShell() {
-        return shell;
     }
 }

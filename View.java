@@ -1,56 +1,161 @@
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.events.PaintEvent;
-import org.eclipse.swt.events.PaintListener;
-import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.events.*;
+import org.eclipse.swt.graphics.*;
+import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.*;
 
 public class View {
-    private Graph graph;
+    private Shell shell;
+    private Display display;
+    private Image exitImg, playImg, pauseImg, openImg;
+    private Canvas canvas;
+    private Animator animator;
 
-    public View(Graph graph) {
-        this.graph = graph;
 
-	Display display = new Display();
-	Shell shell = new Shell(display);
+    public View() {
+        display = new Display();
+        shell = new Shell(display);
+        shell.setText("Gallant Animation Viewer");
 
-        shell.addPaintListener(new GraphPaintListener());
+        shell.setLayout(new GridLayout());
 
-        shell.setText("GDR");
-        shell.setSize(graph.getWidth() + 50, graph.getHeight() + 50);
-	shell.open();
+        initMenu();
+        initToolbar();
+        initCanvas();
+        shell.open();
 
 	while (!shell.isDisposed ()) {
             if (!display.readAndDispatch())
                 display.sleep();
 	}
-
-	display.dispose();
     }
 
-    private class GraphPaintListener implements PaintListener {
-        public void paintControl(PaintEvent e) {
-            drawGraph(e);
-            e.gc.dispose();
-        }
+    public void initCanvas() {
+        canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.BORDER);
+        animator = new Animator(canvas);
+
+        GridData gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.verticalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        canvas.setLayoutData(gridData);
     }
 
-    private void drawGraph(PaintEvent e) {
-        Color white = new Color(e.display, 255, 255, 255);
-        int r = 30;
+    public void initMenu() {
+        Menu menuBar = new Menu(shell, SWT.BAR);
+        MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
+        cascadeFileMenu.setText("&File");
         
-        for (Edge edge : graph.getEdges()) {
-            Node a = edge.getA(), b = edge.getB();
-            e.gc.drawLine(a.getX(), a.getY(), b.getX(), b.getY());
+        Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
+        cascadeFileMenu.setMenu(fileMenu);
+
+        MenuItem exitItem = new MenuItem(fileMenu, SWT.PUSH);
+        exitItem.setText("&Exit");
+
+        MenuItem openGraphItem = new MenuItem(fileMenu, SWT.PUSH);
+        openGraphItem.setText("Open &Graph");
+
+        MenuItem openAnimationItem = new MenuItem(fileMenu, SWT.PUSH);
+        openAnimationItem.setText("Open &Animation");
+
+        shell.setMenuBar(menuBar);
+
+        exitItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                shell.getDisplay().dispose();
+                System.exit(0);
+            }
+        });
+
+        openGraphItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(shell, SWT.NULL);
+                String path = dialog.open();
+                Reader reader = new Reader();
+                reader.ReadFile(path);
+            }
+        });
+
+        openAnimationItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                FileDialog dialog = new FileDialog(shell, SWT.NULL);
+                String path = dialog.open();
+            }
+        });
+    }
+
+    public void initToolbar() {
+
+        Device dev = shell.getDisplay();
+        try {
+            exitImg = new Image(dev, "img/exit.png");
+            //            openImg = new Image(dev, "img/open.png");
+            playImg = new Image(dev, "img/play.png");
+            //            pauseImg = new Image(dev, "img/pause.png");
+
+        } catch (Exception e) {
+            System.out.println("Cannot load images");
+            System.out.println(e.getMessage());
+            System.exit(1);
         }
 
-        for (Node n : graph.getNodes()) {
-            int x = n.getX(), y=n.getY();
-            e.gc.setBackground(white);
-            e.gc.fillOval(x-r/2, y-r/2, r, r);
-            e.gc.drawOval(x-r/2, y-r/2, r, r);
-            e.gc.drawText(n.getName(), x-r/4, y-r/4, SWT.DRAW_TRANSPARENT);
-        }
+        ToolBar toolBar = new ToolBar(shell, SWT.BORDER);
+
+        GridData gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        toolBar.setLayoutData(gridData);
+        
+        ToolItem exit = new ToolItem(toolBar, SWT.PUSH);
+        exit.setImage(exitImg);
+ 
+        // ToolItem open = new ToolItem(toolBar, SWT.PUSH);
+        // exit.setImage(openImg);
+ 
+        ToolItem play = new ToolItem(toolBar, SWT.PUSH);
+        play.setImage(playImg);
+
+        //        ToolItem pause = new ToolItem(toolBar, SWT.PUSH);
+        //        pause.setImage(pauseImg);
+
+        toolBar.pack();
+
+        exit.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                System.exit(0);
+            }
+        });
+
+        // open.addSelectionListener(new SelectionAdapter() {
+        //     @Override
+        //     public void widgetSelected(SelectionEvent e) {
+        //         FileDialog dialog = new FileDialog(shell, SWT.NULL);
+        //         String path = dialog.open();
+        //     }
+        // });
+
+        play.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                animator.run();
+            }
+        });
+    }
+
+    public Shell getShell() {
+        return shell;
+    }
+
+    public Display getDisplay() {
+        return display;
+    }
+
+    public Animator getAnimator() {
+        return animator;
     }
 }
