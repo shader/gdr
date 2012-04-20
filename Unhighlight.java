@@ -4,24 +4,24 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
  
-public class Highlight implements Effect {
+public class Unhighlight implements Effect {
     Runnable runnable;
     PaintEvent e;
 
-    public Highlight(final Iterable<? extends Element> elements) {
+    public Unhighlight(final Iterable<? extends Element> elements) {
         runnable = new Runnable() {
             public void run() {
                 for (Element element : elements) {
-                    element.draw(e, Config.getHighlightColor(), Config.getBackgroundColor());
+                    element.draw(e, Config.getForegroundColor(), Config.getBackgroundColor());
                 }
             }
         };
     }
 
-    public Highlight(final Element element) {
+    public Unhighlight(final Element element) {
         runnable = new Runnable() {
             public void run() {
-                element.draw(e, Config.getHighlightColor(), Config.getBackgroundColor());
+                element.draw(e, Config.getForegroundColor(), Config.getBackgroundColor());
             }
         };
     }

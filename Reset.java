@@ -12,7 +12,9 @@ public class Reset implements Effect {
         this.graph = graph;
     }
 
-    public void draw(PaintEvent e, Animator anim) {
+    public void draw(PaintEvent e, Canvas canvas) {
+        e.gc.setBackground(Config.getBackgroundColor());
+        e.gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
         graph.draw(e);
     }
 }

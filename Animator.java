@@ -6,12 +6,12 @@ import org.eclipse.swt.widgets.*;
 import java.util.*;
  
 public class Animator {
-    private Canvas canvas;
     private float step = 0;
     private ArrayList<Effect> effects;
     private PaintEvent e;
     private Runnable runnable;
     private Display display;
+    private Canvas canvas;
 
     public Animator(Canvas canvas) {
         this.canvas = canvas;
@@ -35,7 +35,7 @@ public class Animator {
         canvas.addPaintListener(new PaintListener() {
                 public void paintControl(PaintEvent e) {
                     for(int i=0; i<step && i<effects.size(); i++) {
-                        effects.get(i).draw(e, Animator.this);
+                        effects.get(i).draw(e, Animator.this.getCanvas());
                     }
                 }
             });
@@ -52,5 +52,13 @@ public class Animator {
 
     public void add(Effect effect) {
         effects.add(effect);
+    }
+
+    public ArrayList<Effect> getEffects() {
+        return effects;
+    }
+
+    public Canvas getCanvas() {
+        return canvas;
     }
 }

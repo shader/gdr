@@ -9,16 +9,18 @@ public class View {
     private Display display;
     private Image exitImg, playImg, pauseImg, openImg;
     private Canvas canvas;
-    private Animator animator;
+    private Controller controller;
 
-
-    public View() {
+    public View(Controller controller) {
+        this.controller = controller;
         display = new Display();
         shell = new Shell(display);
         shell.setText("Gallant Animation Viewer");
 
         shell.setLayout(new GridLayout());
+    }
 
+    public void Initialize() {
         initMenu();
         initToolbar();
         initCanvas();
@@ -32,7 +34,6 @@ public class View {
 
     public void initCanvas() {
         canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.BORDER);
-        animator = new Animator(canvas);
 
         GridData gridData = new GridData();
         gridData.horizontalAlignment = GridData.FILL;
@@ -46,7 +47,10 @@ public class View {
         Menu menuBar = new Menu(shell, SWT.BAR);
         MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
         cascadeFileMenu.setText("&File");
+        MenuItem cascadeAnimMenu = new MenuItem(menuBar, SWT.CASCADE);
+        cascadeAnimMenu.setText("&Animation");
         
+        //file menu
         Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
         cascadeFileMenu.setMenu(fileMenu);
 
@@ -58,6 +62,16 @@ public class View {
 
         MenuItem openAnimationItem = new MenuItem(fileMenu, SWT.PUSH);
         openAnimationItem.setText("Open &Animation");
+
+        //temporary animation menu
+        Menu animMenu = new Menu(shell, SWT.DROP_DOWN);
+        cascadeAnimMenu.setMenu(animMenu);
+
+        MenuItem testAnimationItem = new MenuItem(animMenu, SWT.PUSH);
+        testAnimationItem.setText("Test Animation");
+
+        MenuItem DFSItem = new MenuItem(animMenu, SWT.PUSH);
+        DFSItem.setText("Depth First Search");
 
         shell.setMenuBar(menuBar);
 
@@ -74,8 +88,7 @@ public class View {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(shell, SWT.NULL);
                 String path = dialog.open();
-                Reader reader = new Reader();
-                reader.ReadFile(path);
+                controller.LoadGraph(path);
             }
         });
 
@@ -84,6 +97,21 @@ public class View {
             public void widgetSelected(SelectionEvent e) {
                 FileDialog dialog = new FileDialog(shell, SWT.NULL);
                 String path = dialog.open();
+                controller.LoadAnimation(path);
+            }
+        });
+
+        testAnimationItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                controller.LoadTestAnimation();
+            }
+        });
+
+        DFSItem.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                controller.LoadDFSAnimation();
             }
         });
     }
@@ -142,7 +170,7 @@ public class View {
         play.addSelectionListener(new SelectionAdapter() {
             @Override
             public void widgetSelected(SelectionEvent e) {
-                animator.run();
+                controller.RunAnimation();
             }
         });
     }
@@ -155,7 +183,7 @@ public class View {
         return display;
     }
 
-    public Animator getAnimator() {
-        return animator;
+    public Canvas getCanvas() {
+        return canvas;
     }
 }

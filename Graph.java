@@ -15,6 +15,53 @@ public class Graph {
     public Iterable<Node> getNodes() {
         return Collections.unmodifiableCollection(nodes.values());
     }
+
+    public Iterable<Node> getNeighbors(Node node) {
+        ArrayList<Node> neighbors = new ArrayList<Node>();
+        for (Edge e : edges) {
+            if (e.getA() == node)
+                neighbors.add(e.getB());
+            else if (e.getB() == node)
+                neighbors.add(e.getA());
+        }
+        return Collections.unmodifiableList(neighbors);
+    }
+
+    public Iterable<Node> getSuccessors(Node node) {
+        ArrayList<Node> sucessors = new ArrayList<Node>();
+        for (Edge e : edges) {
+            if (e.getA() == node)
+                sucessors.add(e.getB());
+        }
+        return Collections.unmodifiableList(sucessors);
+    }
+
+    public Iterable<Node> getPredecessors(Node node) {
+        ArrayList<Node> predecessors = new ArrayList<Node>();
+        for (Edge e : edges) {
+            if (e.getB() == node)
+                predecessors.add(e.getA());
+        }
+        return Collections.unmodifiableList(predecessors);
+    }
+
+    public Iterable<Edge> getEdgesFrom(Node node) {
+        ArrayList<Edge> fromList = new ArrayList<Edge>();
+        for (Edge e : edges) {
+            if (e.getA() == node)
+                fromList.add(e);
+        }
+        return Collections.unmodifiableList(fromList);
+    }
+
+    public Iterable<Edge> getEdgesTo(Node node) {
+        ArrayList<Edge> toList = new ArrayList<Edge>();
+        for (Edge e : edges) {
+            if (e.getB() == node)
+                toList.add(e);
+        }
+        return Collections.unmodifiableList(toList);
+    }
     
     public Node getNode(String name) {
         return nodes.get(name);

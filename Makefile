@@ -7,12 +7,13 @@ XFLAG =
 	$(JC) $(JFLAGS) $*.java
 
 CLASSES = \
-        GDR.java \
+	GDR.java \
+        Controller.java \
         Edge.java \
         Node.java \
         Graph.java \
 	View.java \
-	Reader.java
+	Reader.java \
 
 default: classes gdr
 

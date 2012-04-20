@@ -3,15 +3,9 @@ import java.io.*;
 
 public class GDR {
     public static void main (String[] args) {
-        Reader reader = new Reader();
-        //read file
+        Controller controller = new Controller();
         if (args.length > 0) {
-            reader.ReadFile(args[0]);
-        } else {
-            reader.ReadStdin();
+            controller.LoadGraph(args[0]);
         }
-
-        View view = new View();
-        TestAnim test = new TestAnim(view.getAnimator(), reader.getGraph());
     }
 }
