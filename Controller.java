@@ -21,6 +21,9 @@ public class Controller {
     public void LoadGraph(String path) {
         reader = new Reader();
         graph = reader.ReadFile(path);
+        animator = new Animator(view.getCanvas());
+        animator.add(new Reset(graph));
+        view.getCanvas().redraw();
     }
 
     /**
@@ -32,7 +35,6 @@ public class Controller {
      * Load the test animation (blinks nodes and then edges)
      */
     public void LoadTestAnimation() {
-        animator = new Animator(view.getCanvas());
         TestAnim test = new TestAnim(animator, graph);
     }
 
@@ -40,7 +42,6 @@ public class Controller {
      * Load example DFS animation
      */
     public void LoadDFSAnimation() {
-        animator = new Animator(view.getCanvas());
         DepthFirstSearch dfs = new DepthFirstSearch();
         dfs.Load(animator.getEffects(), graph);
     }

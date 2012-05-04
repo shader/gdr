@@ -45,7 +45,7 @@ public class Animator {
     private void createContents(Canvas canvas) {
         canvas.addPaintListener(new PaintListener() {
                 public void paintControl(PaintEvent e) {
-                    for(int i=0; i<step && i<effects.size(); i++) {
+                    for(int i=0; i<=step && i<effects.size(); i++) {
                         effects.get(i).draw(e, Animator.this.getCanvas());
                     }
                 }
