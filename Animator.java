@@ -4,7 +4,11 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import java.util.*;
- 
+
+/**
+ * Tracks current state of the animation.
+ * Contains a list of Effects that represent the animation sequence, and uses a timer to automatically step through the animation when it is playing.
+ */ 
 public class Animator {
     private float step = 0;
     private ArrayList<Effect> effects;
@@ -20,6 +24,9 @@ public class Animator {
         createContents(canvas);
     }
 
+    /**
+     * Starts the animation.
+     */
     public void run() {
         runnable = new Runnable() {
                 public void run() {
@@ -31,6 +38,10 @@ public class Animator {
         display.timerExec(Config.getTimerInterval(), runnable);
     }
  
+    /**
+     * Intermal method responsible for drawing the canvas.
+     * Redraws all of the effects up to the current one every refresh.
+     */
     private void createContents(Canvas canvas) {
         canvas.addPaintListener(new PaintListener() {
                 public void paintControl(PaintEvent e) {
@@ -40,8 +51,10 @@ public class Animator {
                 }
             });
     }
- 
-    //Perform calculations required for redrawing the canvas
+    
+    /**
+     * Increment counter and redraw the canvas to automatically continue the animation.
+     */
     void animate() {
         step += 1.0/Config.getStepLength();
         if (step > effects.size()) {
@@ -50,14 +63,23 @@ public class Animator {
         canvas.redraw();
     }
 
+    /**
+     * Add an effect to the animation sequence
+     */
     public void add(Effect effect) {
         effects.add(effect);
     }
 
+    /**
+     * @return the list of effects
+     */
     public ArrayList<Effect> getEffects() {
         return effects;
     }
 
+    /**
+     * @return a reference to the canvas
+     */
     public Canvas getCanvas() {
         return canvas;
     }

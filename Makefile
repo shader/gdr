@@ -13,7 +13,7 @@ CLASSES = \
         Node.java \
         Graph.java \
 	View.java \
-	Reader.java \
+	Reader.java
 
 default: classes gdr
 

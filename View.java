@@ -4,6 +4,9 @@ import org.eclipse.swt.graphics.*;
 import org.eclipse.swt.widgets.*;
 import org.eclipse.swt.layout.*;
 
+/**
+ * View class for MVC architecture. Contains code pertaining to drawing the GUI
+ */
 public class View {
     private Shell shell;
     private Display display;
@@ -20,6 +23,9 @@ public class View {
         shell.setLayout(new GridLayout());
     }
 
+    /**
+     * Initialize all ui elements, and then display the window
+     */
     public void Initialize() {
         initMenu();
         initToolbar();
@@ -32,17 +38,9 @@ public class View {
 	}
     }
 
-    public void initCanvas() {
-        canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.BORDER);
-
-        GridData gridData = new GridData();
-        gridData.horizontalAlignment = GridData.FILL;
-        gridData.verticalAlignment = GridData.FILL;
-        gridData.grabExcessHorizontalSpace = true;
-        gridData.grabExcessVerticalSpace = true;
-        canvas.setLayoutData(gridData);
-    }
-
+    /**
+     * Initialize the drop-down menus in the appropriate area of the window
+     */
     public void initMenu() {
         Menu menuBar = new Menu(shell, SWT.BAR);
         MenuItem cascadeFileMenu = new MenuItem(menuBar, SWT.CASCADE);
@@ -73,7 +71,10 @@ public class View {
         MenuItem DFSItem = new MenuItem(animMenu, SWT.PUSH);
         DFSItem.setText("Depth First Search");
 
+        //add the menubar to the shell
         shell.setMenuBar(menuBar);
+
+        //actions for the menu items
 
         exitItem.addSelectionListener(new SelectionAdapter() {
             @Override
@@ -116,6 +117,9 @@ public class View {
         });
     }
 
+    /**
+     * Initialize the toolbar with icons and selection listeners in the appropriate part of the window
+     */
     public void initToolbar() {
 
         Device dev = shell.getDisplay();
@@ -175,14 +179,37 @@ public class View {
         });
     }
 
+    /**
+     * Initialize the canvas in the appropriate part of the window
+     */
+    public void initCanvas() {
+        canvas = new Canvas(shell, SWT.NO_BACKGROUND | SWT.BORDER);
+
+        GridData gridData = new GridData();
+        gridData.horizontalAlignment = GridData.FILL;
+        gridData.verticalAlignment = GridData.FILL;
+        gridData.grabExcessHorizontalSpace = true;
+        gridData.grabExcessVerticalSpace = true;
+        canvas.setLayoutData(gridData);
+    }
+
+    /**
+     * @returns a reference to the shell (window)
+     */
     public Shell getShell() {
         return shell;
     }
 
+    /**
+     * @returns a reference to the display object
+     */
     public Display getDisplay() {
         return display;
     }
 
+    /**
+     * @returns a reference to the canvas
+     */
     public Canvas getCanvas() {
         return canvas;
     }
