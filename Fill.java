@@ -15,26 +15,40 @@ public class Fill implements Effect {
     /**
      * Fill a set of elements, by setting their background color to the fill color
      */
-    public Fill(final Iterable<? extends Element> elements) {
+    public Fill(final Iterable<? extends Element> elements, final Color fillColor) {
         //A runnable is used to change the way that the draw method works, allowing it to either draw a single element or a set
         runnable = new Runnable() {
             public void run() {
                 for (Element element : elements) {
-                    element.draw(e, Config.getForegroundColor(), Config.getFillColor());
+                    element.draw(e, Config.getForegroundColor(), fillColor);
                 }
             }
         };
     }
 
     /**
+     * Fill a set of elements using the default fill color
+     */
+    public Fill(final Iterable<? extends Element> elements) {
+        this(elements, Config.getFillColor());
+    }
+
+    /**
      * Fill a single element by drawing it with the fill color as the background color
      */
-    public Fill(final Element element) {
+    public Fill(final Element element, final Color fillColor) {
         runnable = new Runnable() {
             public void run() {
-                element.draw(e, Config.getForegroundColor(), Config.getFillColor());
+                element.draw(e, Config.getForegroundColor(), fillColor);
             }
         };
+    }
+
+    /**
+     * Fill a single element with the default fill color
+     */
+    public Fill(final Element element) {
+        this(element, Config.getFillColor());
     }
 
     /**
