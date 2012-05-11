@@ -15,26 +15,12 @@ public class DepthFirstSearch implements Animation {
     public void Load(ArrayList<Effect> effects, Graph graph) {
         this.effects = effects;
         this.graph = graph;
+
         visited = new ArrayList<Node>(); //collection of already visited nodes
 
-        Node first = graph.getNodes().iterator().next(); //pick first node
-        effects.add(new Highlight(first)); //highlight it to show that it is "visited"
-
-        //follow all edges from starting node in order
-        for(Edge e : graph.getEdgesFrom(first)) {
-            Follow(e);
+        for (Node n : graph.getNodes()) { //search through all nodes in graph
+            Visit(n);
         }
-
-        //finished with the starting node, so fill it in
-        effects.add(new Fill(first));
-    }
-
-    /**
-     * Follows an edge, visually marking it and attempting to visit the node at the other end.
-     */
-    private void Follow(Edge e) {
-        effects.add(new Highlight(e)); //highlight edge
-        Visit(e.getB()); //visit node
     }
 
     /**
@@ -44,11 +30,14 @@ public class DepthFirstSearch implements Animation {
         //test to make sure this node is not already visited
         if (!visited.contains(n)) {
             visited.add(n); //add it to collection of visited nodes
-            effects.add(new Highlight(n)); //highlight node
+            effects.add(new Highlight(n)); //highlight node to show current focus
+            effects.add(new Thicken(n)); //thicken node to show it's already been visited
 
             //follow all edges from node
             for (Edge e : graph.getEdgesFrom(n)) {
-                Follow(e);
+                effects.add(new Highlight(e)); //highlight edge to indicate current focus
+                effects.add(new Thicken(e)); //thicken to show already followed
+                Visit(e.getB()); //visit node
             }
 
             //fill in finished node
