@@ -43,4 +43,14 @@ public class Config {
      * @return the default background color
      */
     public static Color getBackgroundColor() { return Display.getCurrent().getSystemColor(SWT.COLOR_WHITE); }
+
+    /**
+     * @return the default line width
+     */
+    public static int getDefaultLineWidth() { return 1; }
+
+    /**
+     * @return the default thickened line width
+     */
+    public static int getThickLineWidth() { return 5; }
 }
