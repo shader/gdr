@@ -11,9 +11,17 @@ import java.util.*;
 public class Reset implements Effect {
     private Graph graph;
 
+    /**
+     * Reset the canvas to draw the graph without any special colors or effects
+     */
     public Reset(Graph graph) {
         this.graph = graph;
     }
+
+    /**
+     * Reset the canvas to the default background color
+     */
+    public Reset() { this(null); }
     
     /**
      * Draw the graph with normal foreground and background colors
@@ -21,6 +29,6 @@ public class Reset implements Effect {
     public void draw(PaintEvent e, Canvas canvas) {
         e.gc.setBackground(Config.getBackgroundColor());
         e.gc.fillRectangle(0, 0, canvas.getBounds().width, canvas.getBounds().height);
-        graph.draw(e);
+        if (graph != null) graph.draw(e);
     }
 }
