@@ -65,9 +65,6 @@ public class View {
         Menu animMenu = new Menu(shell, SWT.DROP_DOWN);
         cascadeAnimMenu.setMenu(animMenu);
 
-        MenuItem testAnimationItem = new MenuItem(animMenu, SWT.PUSH);
-        testAnimationItem.setText("Test Animation");
-
         MenuItem DFSItem = new MenuItem(animMenu, SWT.PUSH);
         DFSItem.setText("Depth First Search");
 
@@ -99,13 +96,6 @@ public class View {
                 FileDialog dialog = new FileDialog(shell, SWT.NULL);
                 String path = dialog.open();
                 controller.LoadAnimation(path);
-            }
-        });
-
-        testAnimationItem.addSelectionListener(new SelectionAdapter() {
-            @Override
-            public void widgetSelected(SelectionEvent e) {
-                controller.LoadTestAnimation();
             }
         });
 

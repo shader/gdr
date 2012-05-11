@@ -8,22 +8,34 @@ public class Controller {
     View view;
     Reader reader;
     Graph graph;
-    private Animator animator;
+    Animator animator;
+    Animation animation;
 
     public Controller() {
         view = new View(this);
         view.Initialize();
     }
 
+    void InitializeAnimator() {
+        if (animator == null) animator = new Animator(view.getCanvas());
+        animator.Reset(graph);
+    }
+
     /**
      * Load a graph from a file
      */
     public void LoadGraph(String path) {
+        
+        //read graph
         reader = new Reader();
         graph = reader.ReadFile(path);
-        animator = new Animator(view.getCanvas());
-        animator.add(new Reset(graph));
+
+        //draw graph on canvas
+        InitializeAnimator();
         view.getCanvas().redraw();
+
+        //re-apply animation to graph if necessary
+        if (animation != null) animation.Load(animator.getEffects(), graph);
     }
 
     /**
@@ -32,18 +44,15 @@ public class Controller {
     public void LoadAnimation(String path) {}
 
     /**
-     * Load the test animation (blinks nodes and then edges)
-     */
-    public void LoadTestAnimation() {
-        TestAnim test = new TestAnim(animator, graph);
-    }
-
-    /**
      * Load example DFS animation
      */
     public void LoadDFSAnimation() {
-        DepthFirstSearch dfs = new DepthFirstSearch();
-        dfs.Load(animator.getEffects(), graph);
+        InitializeAnimator();
+        animation = new DepthFirstSearch();
+
+        //only generate animation if graph is already loaded
+        if (graph != null)
+            animation.Load(animator.getEffects(), graph);
     }
 
     /**

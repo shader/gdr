@@ -64,6 +64,31 @@ public class Animator {
     }
 
     /**
+     * Pause the animation
+     */
+    public void Pause() {
+        if (runnable != null)
+            display.timerExec(-1, runnable);
+    }
+
+    /**
+     * Restart the animation
+     */
+    public void Restart() {
+        step = 0;
+    }
+
+    /**
+     * Drop the current animation and clear the canvas to the plain graph, if provided
+     */
+    public void Reset(Graph graph) {
+        Pause();
+        Restart();
+        effects.clear();
+        effects.add(new Reset(graph));
+    }
+
+    /**
      * Add an effect to the animation sequence
      */
     public void add(Effect effect) {
